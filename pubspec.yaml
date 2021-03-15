@@ -23,6 +23,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  carousel_pro: 1.0.0
+  cloud_firestore: 0.13.0+1
+  firebase_auth: 0.15.3+1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -32,7 +35,6 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  carousel_pro: 1.0.0 
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
