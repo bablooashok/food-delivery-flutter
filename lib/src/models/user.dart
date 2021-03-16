@@ -16,5 +16,6 @@ class UserModel {
   UserModel.fromSnapShot(DocumentSnapshot snapshot){
     _name = snapshot.data[NAME];
     _email = snapshot.data[EMAIL];
-    _id = snapshot.data[ID];  }
+    _id = snapshot.data[ID];
+  }
 }
