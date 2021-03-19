@@ -1,47 +1,45 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_food_delivery/src/helpers/style.dart';
-import 'package:flutter_food_delivery/src/providers/auth.dart';
-import 'package:flutter_food_delivery/src/screens/home.dart';
-import 'package:flutter_food_delivery/src/screens/login.dart';
-import 'package:flutter_food_delivery/src/widgets/loading.dart';
+import  'package:flutter/material.dart';
+import 'package:flutter_food_delivery/scr/providers/category.dart';
+import 'package:flutter_food_delivery/scr/providers/product.dart';
+import 'package:flutter_food_delivery/scr/providers/restaurant.dart';
+import 'package:flutter_food_delivery/scr/providers/user.dart';
+import 'package:flutter_food_delivery/scr/screens/home.dart';
+import 'package:flutter_food_delivery/scr/screens/login.dart';
+import 'package:flutter_food_delivery/scr/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MultiProvider(
-      providers: [
-    ChangeNotifierProvider.value(value: AuthProvider.initialize())
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider.value(value: UserProvider.initialize()),
+    ChangeNotifierProvider.value(value: CategoryProvider.initialize()),
+    ChangeNotifierProvider.value(value: RestaurantProvider.initialize()),
+    ChangeNotifierProvider.value(value: ProductProvider.initialize()),
   ],
-  child: MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: 'Food App',
-    theme: ThemeData(
-      primarySwatch: red,
-    ),
-    home: ScreenController(),
-  )));
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Food App',
+          theme: ThemeData(
+            primarySwatch: Colors.red,
+          ),
+          home: ScreensController()
+      )));
 }
 
-class ScreenController extends StatelessWidget{
+
+class ScreensController extends StatelessWidget {
   @override
-  Widget build(BuildContext context){
-    final auth = Provider.of<AuthProvider>(context);
+  Widget build(BuildContext context) {
+    final auth = Provider.of<UserProvider>(context);
     switch(auth.status){
       case Status.Uninitialized:
-        print("Uninitialized");
         return Loading();
       case Status.Unauthenticated:
-        // print("Unauthenticated");
-        // break;
       case Status.Authenticating:
-        print("Authenticating");
         return LoginScreen();
       case Status.Authenticated:
-        print("Authenticated");
         return Home();
-      default:
-        print("default");
-        return LoginScreen();
+      default: return LoginScreen();
     }
   }
 }

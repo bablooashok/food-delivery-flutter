@@ -1,59 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_food_delivery/src/helpers/screen_navigation.dart';
-import 'package:flutter_food_delivery/src/helpers/style.dart';
-import 'package:flutter_food_delivery/src/models/products.dart';
-import 'package:flutter_food_delivery/src/screens/details.dart';
-
+import 'package:flutter_food_delivery/scr/helpers/screen_navigation.dart';
+import 'package:flutter_food_delivery/scr/helpers/style.dart';
+import 'package:flutter_food_delivery/scr/models/product.dart';
+import 'package:flutter_food_delivery/scr/providers/product.dart';
+import 'package:flutter_food_delivery/scr/screens/details.dart';
+import 'package:provider/provider.dart';
+import 'package:transparent_image/transparent_image.dart';
 import 'custom_text.dart';
+import 'loading.dart';
 
-List<Product> productList = [
-  Product(
-      name: "Cereals",
-      price: 50,
-      rating: 4.2,
-      vendor: "GoodFoos",
-      wishList: true,
-      image: "1.jpg"),
-  Product(
-      name: "Taccos",
-      price: 99,
-      rating: 4.7,
-      vendor: "GoodFoos",
-      wishList: false,
-      image: "5.jpg"),
-  Product(
-      name: "Cereals",
-      price: 50,
-      rating: 4.2,
-      vendor: "GoodFoos",
-      wishList: true,
-      image: "1.jpg"),
-  Product(
-      name: "Taccos",
-      price: 99,
-      rating: 4.7,
-      vendor: "GoodFoos",
-      wishList: false,
-      image: "5.jpg"),
-];
 
 class Featured extends StatelessWidget {
+  final ProductModel product;
+
+  const Featured({Key key, this.product}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    final productProvider = Provider.of<ProductProvider>(context);
+
     return Container(
-      height: 240,
+      height: 220,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
-        itemCount: productList.length,
+        itemCount: productProvider.products.length,
         itemBuilder: (_, index) {
           return Padding(
             padding: EdgeInsets.fromLTRB(5, 14, 5, 12),
             child: GestureDetector(
               onTap: () {
-                changeScreen(context, Details(product: productList[index],));
+                changeScreen(context, Details(product: productProvider.products[index],));
               },
               child: Container(
-                height: 240,
+                height: 220,
                 width: 195,
                 decoration: BoxDecoration(
                   color: white,
@@ -63,10 +42,19 @@ class Featured extends StatelessWidget {
                 ]),
                 child: Column(
                   children: <Widget>[
-                    Image.asset(
-                      "images/${productList[index].image}",
-                      height: 140,
-                      width: 140,
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child:Stack(
+                        children: <Widget>[
+                          Positioned.fill(child: Align(
+                            alignment: Alignment.center,
+                            child: Loading(),
+                          )),
+                          Center(
+                            child: FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: productProvider.products[index].image,height: 120,width: 195,),
+                          )
+                        ],
+                      ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -74,7 +62,7 @@ class Featured extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: CustomText(
-                            text: productList[index].name,
+                            text: productProvider.products[index].name,
                           ),
                         ),
                         Padding(
@@ -91,7 +79,7 @@ class Featured extends StatelessWidget {
                                 ]),
                             child: Padding(
                               padding: const EdgeInsets.all(4.0),
-                              child: productList[index].wishList
+                              child: productProvider.products[index].featured
                                   ? Icon(Icons.favorite, color: red, size: 18)
                                   : Icon(Icons.favorite_border,
                                       color: red, size: 18),
@@ -108,7 +96,7 @@ class Featured extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: CustomText(
-                                text: productList[index].rating.toString(),
+                                text: productProvider.products[index].rating.toString(),
                                 color: grey,
                                 size: 14,
                               ),
@@ -125,7 +113,7 @@ class Featured extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: CustomText(
-                            text: "\₹${productList[index].price}",
+                            text: "\₹${productProvider.products[index].price}",
                             weight: FontWeight.bold,
                           ),
                         )

@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_food_delivery/src/models/user.dart';
+import 'package:flutter_food_delivery/scr/models/user.dart';
 
 class UserServices{
   String collection = "users";
   Firestore _firestore = Firestore.instance;
 
-  void createUser(Map<String, dynamic> values){
-    _firestore.collection(collection).document(values["id"]).setData(values);
+  void createUser(Map<String, dynamic> values) {
+    String id = values["id"];
+    _firestore.collection(collection).document(id).setData(values);
   }
 
   void updateUserData(Map<String, dynamic> values){
@@ -14,6 +15,6 @@ class UserServices{
   }
 
   Future<UserModel> getUserById(String id) => _firestore.collection(collection).document(id).get().then((doc){
-    return UserModel.fromSnapShot(doc);
+    return UserModel.fromSnapshot(doc);
   });
 }
