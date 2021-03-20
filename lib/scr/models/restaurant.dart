@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 
-class RestaurantModel{
+class RestaurantModel {
   static const ID = "id";
   static const NAME = "name";
   static const RATING = "rating";
@@ -17,16 +16,21 @@ class RestaurantModel{
   bool _popular;
 
   int get id => _id;
+
   String get name => _name;
+
   double get rating => _rating;
+
   int get rates => _rates;
+
   String get image => _image;
+
   bool get popular => _popular;
 
-  RestaurantModel.fromSnapshot(DocumentSnapshot snapshot){
+  RestaurantModel.fromSnapshot(DocumentSnapshot snapshot) {
     _id = snapshot.data[ID];
     _name = snapshot.data[NAME];
-    _rating = snapshot.data[RATING];
+    _rating = snapshot.data[RATING].toDouble();
     _rates = snapshot.data[RATES];
     _image = snapshot.data[IMAGE];
     _popular = snapshot.data[POPULAR];

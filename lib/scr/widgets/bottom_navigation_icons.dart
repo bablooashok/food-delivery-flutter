@@ -12,12 +12,20 @@ class BottomNavIcon extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
-        onTap: (){},
+        onTap: () {},
         child: Column(
           children: <Widget>[
-            Image.asset("images/$image", width: 23, height: 23,),
-            SizedBox(height: 2,),
-            CustomText(text: name,)
+            Image.asset(
+              "images/$image",
+              width: 23,
+              height: 23,
+            ),
+            SizedBox(
+              height: 2,
+            ),
+            CustomText(
+              text: name,
+            )
           ],
         ),
       ),

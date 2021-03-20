@@ -9,7 +9,6 @@ import 'package:transparent_image/transparent_image.dart';
 import 'custom_text.dart';
 import 'loading.dart';
 
-
 class Featured extends StatelessWidget {
   final ProductModel product;
 
@@ -29,29 +28,42 @@ class Featured extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(5, 14, 5, 12),
             child: GestureDetector(
               onTap: () {
-                changeScreen(context, Details(product: productProvider.products[index],));
+                changeScreen(
+                    context,
+                    Details(
+                      product: productProvider.products[index],
+                    ));
               },
               child: Container(
                 height: 220,
                 width: 195,
                 decoration: BoxDecoration(
-                  color: white,
-                  borderRadius: BorderRadius.circular(15), 
-                  boxShadow: [BoxShadow(
-                      color: red[50], offset: Offset(15, 5), blurRadius: 30),
-                ]),
+                    color: white,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: [
+                      BoxShadow(
+                          color: red[50],
+                          offset: Offset(15, 5),
+                          blurRadius: 30),
+                    ]),
                 child: Column(
                   children: <Widget>[
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
-                      child:Stack(
+                      child: Stack(
                         children: <Widget>[
-                          Positioned.fill(child: Align(
+                          Positioned.fill(
+                              child: Align(
                             alignment: Alignment.center,
                             child: Loading(),
                           )),
                           Center(
-                            child: FadeInImage.memoryNetwork(placeholder: kTransparentImage, image: productProvider.products[index].image,height: 120,width: 195,),
+                            child: FadeInImage.memoryNetwork(
+                              placeholder: kTransparentImage,
+                              image: productProvider.products[index].image,
+                              height: 120,
+                              width: 195,
+                            ),
                           )
                         ],
                       ),
@@ -96,7 +108,8 @@ class Featured extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: CustomText(
-                                text: productProvider.products[index].rating.toString(),
+                                text: productProvider.products[index].rating
+                                    .toString(),
                                 color: grey,
                                 size: 14,
                               ),

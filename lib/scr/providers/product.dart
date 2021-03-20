@@ -2,29 +2,38 @@ import 'package:flutter/material.dart';
 import '../helpers/product.dart';
 import '../models/product.dart';
 
-class ProductProvider with ChangeNotifier{
+class ProductProvider with ChangeNotifier {
   ProductServices _productServices = ProductServices();
   List<ProductModel> products = [];
   List<ProductModel> productsByCategory = [];
   List<ProductModel> productsByRestaurant = [];
 
-  ProductProvider.initialize(){
+  List<ProductModel> productsSearched = [];
+
+  ProductProvider.initialize() {
     _loadCategories();
   }
 
-  _loadCategories() async{
+  _loadCategories() async {
     products = await _productServices.getProducts();
     notifyListeners();
   }
 
-  Future loadProductsByCategory({String categoryName})async{
-    productsByCategory = await _productServices.getProductsOfCategory(category: categoryName);
+  Future loadProductsByCategory({String categoryName}) async {
+    productsByCategory =
+        await _productServices.getProductsOfCategory(category: categoryName);
     notifyListeners();
   }
 
-  Future loadProductsByRestaurant({int restaurantId})async {
+  Future loadProductsByRestaurant({int restaurantId}) async {
     productsByRestaurant =
-    await _productServices.getProductsByRestaurant(id: restaurantId);
+        await _productServices.getProductsByRestaurant(id: restaurantId);
+    notifyListeners();
+  }
+
+  Future search({String productName}) async {
+    productsSearched =
+        await _productServices.searchProducts(productName: productName);
     notifyListeners();
   }
 }

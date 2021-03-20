@@ -47,7 +47,7 @@ class ProductModel {
 
   bool get featured => _featured;
 
-  ProductModel.fromSnapshot(DocumentSnapshot snapshot){
+  ProductModel.fromSnapshot(DocumentSnapshot snapshot) {
     _id = snapshot.data[ID];
     _name = snapshot.data[NAME];
     _rating = snapshot.data[RATING];

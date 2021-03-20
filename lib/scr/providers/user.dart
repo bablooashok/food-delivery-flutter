@@ -6,10 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_food_delivery/scr/helpers/user.dart';
 import 'package:flutter_food_delivery/scr/models/user.dart';
 
+enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
-enum Status{Uninitialized, Authenticated, Authenticating, Unauthenticated}
-
-class UserProvider with ChangeNotifier{
+class UserProvider with ChangeNotifier {
   FirebaseAuth _auth;
   FirebaseUser _user;
   Status _status = Status.Uninitialized;
@@ -19,7 +18,9 @@ class UserProvider with ChangeNotifier{
 
 //  getter
   UserModel get userModel => _userModel;
+
   Status get status => _status;
+
   FirebaseUser get user => _user;
 
   final formkey = GlobalKey<FormState>();
@@ -28,27 +29,28 @@ class UserProvider with ChangeNotifier{
   TextEditingController password = TextEditingController();
   TextEditingController name = TextEditingController();
 
-
-  UserProvider.initialize(): _auth = FirebaseAuth.instance{
+  UserProvider.initialize() : _auth = FirebaseAuth.instance {
     _auth.onAuthStateChanged.listen(_onStateChanged);
   }
 
-  Future<bool> signUp()async{
-    try{
+  Future<bool> signUp() async {
+    try {
       _status = Status.Authenticating;
       notifyListeners();
-      await _auth.createUserWithEmailAndPassword(email: email.text.trim(), password: password.text.trim()).then((result){
+      await _auth
+          .createUserWithEmailAndPassword(
+              email: email.text.trim(), password: password.text.trim())
+          .then((result) {
         _firestore.collection('users').document(result.user.uid).setData({
-          'name':name.text,
-          'email':email.text,
-          'uid':result.user.uid,
+          'name': name.text,
+          'email': email.text,
+          'uid': result.user.uid,
           "likedFood": [],
           "likedRestaurants": []
-
         });
       });
       return true;
-    }catch(e){
+    } catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
       print(e.toString());
@@ -56,13 +58,14 @@ class UserProvider with ChangeNotifier{
     }
   }
 
-  Future<bool> signIn()async{
-    try{
+  Future<bool> signIn() async {
+    try {
       _status = Status.Authenticating;
       notifyListeners();
-      await _auth.signInWithEmailAndPassword(email: email.text.trim(), password: password.text.trim());
+      await _auth.signInWithEmailAndPassword(
+          email: email.text.trim(), password: password.text.trim());
       return true;
-    }catch(e){
+    } catch (e) {
       _status = Status.Unauthenticated;
       notifyListeners();
       print(e.toString());
@@ -70,25 +73,23 @@ class UserProvider with ChangeNotifier{
     }
   }
 
-
-  Future signOut()async{
+  Future signOut() async {
     _auth.signOut();
     _status = Status.Unauthenticated;
     notifyListeners();
     return Future.delayed(Duration.zero);
   }
 
-  void clearController(){
+  void clearController() {
     name.text = "";
     password.text = "";
     email.text = "";
   }
 
-
-  Future<void> _onStateChanged(FirebaseUser firebaseUser) async{
-    if(firebaseUser == null){
+  Future<void> _onStateChanged(FirebaseUser firebaseUser) async {
+    if (firebaseUser == null) {
       _status = Status.Unauthenticated;
-    }else{
+    } else {
       _user = firebaseUser;
       _status = Status.Authenticated;
       _userModel = await _userServicse.getUserById(user.uid);
