@@ -88,34 +88,9 @@ class UserProvider with ChangeNotifier {
     email.text = "";
   }
 
-  Future<bool> addToCard({ProductModel product, int quantity}) async{
-    try{
-      var uuid = Uuid();
-      String cartItemId = uuid.v4();
-      List cart = _userModel.cart;
-      bool itemExists = false;
-      Map cartItem = {
-        "id": cartItemId,
-        "name": product.name,
-        "image": product.image,
-        "productId": product.id,
-        "price": product.price,
-        "quantity": quantity
-      };
-      for(Map item in cart){
-        if(item["productId"] == cartItem["productId"]){
-          item["quantity"] = item["quantity"] + quantity;
-          itemExists = true;
-          break;
-        }
-      }
-      if(!itemExists) {
-        _userServicse.addToCart(userId: _user.uid, cartItem: cartItem);
-      }
-      return true;
-    }catch(e){
-      return false;
-    }
+  Future<void> reloadUserModel() async{
+    _userModel = await _userServicse.getUserById((user.uid));
+    notifyListeners();
   }
 
   Future<void> _onStateChanged(FirebaseUser firebaseUser) async {
@@ -127,5 +102,46 @@ class UserProvider with ChangeNotifier {
       _userModel = await _userServicse.getUserById(user.uid);
     }
     notifyListeners();
+  }
+
+  Future<bool> addToCard({ProductModel product, int quantity}) async{
+    try{
+      var uuid = Uuid();
+      String cartItemId = uuid.v4();
+      List cart = _userModel.cart;
+      // bool itemExists = false;
+      Map cartItem = {
+        "id": cartItemId,
+        "name": product.name,
+        "image": product.image,
+        "productId": product.id,
+        "price": product.price,
+        "quantity": quantity
+      };
+      // for(Map item in cart){
+      //   if(item["productId"] == cartItem["productId"]){
+      //     item["quantity"] = item["quantity"] + quantity;
+      //     itemExists = true;
+      //     break;
+      //   }
+      // }
+      //   if(!itemExists) {
+          _userServicse.addToCart(userId: _user.uid, cartItem: cartItem);
+      //   }
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
+
+  Future<bool> removeFromCart({Map cartItem,}) async{
+    try{
+    _userServicse.removeFromCart(userId: _user.uid,cartItem: cartItem);
+
+      return true;
+    }catch(e){
+      print("The Error is: ${e.toString()}");
+      return false;
+    }
   }
 }

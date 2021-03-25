@@ -52,7 +52,7 @@ class _DetailsState extends State<Details> {
       ),
       backgroundColor: white,
       body: SafeArea(
-        child: Column(
+        child: app.isLoading ? Loading() : Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             CircleAvatar(
@@ -103,15 +103,16 @@ class _DetailsState extends State<Details> {
                 ),
                 GestureDetector(
                   onTap: () async{
-                    // app.changeLoading();
+                    app.changeLoading();
                     bool val = await user.addToCard(product: widget.product, quantity: quantity);
                     if(val){
                       _key.currentState.showSnackBar(
                           SnackBar(content: Text("Item added to cart!"))
                       );
+                      user.reloadUserModel();
+                      app.changeLoading();
                       return;
                     }
-                    // app.changeLoading();
                     },
                   child: Container(
                     decoration: BoxDecoration(

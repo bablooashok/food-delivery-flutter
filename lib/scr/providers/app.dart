@@ -6,7 +6,9 @@ class AppProvider with ChangeNotifier {
   bool isLoading = false;
   SearchBy search = SearchBy.PRODUCTS;
   String filterBy = "Products";
-
+  int totalPrice =0;
+  int priceSum = 0;
+  int quantitySum = 0;
   void changeLoading() {
     isLoading = !isLoading;
     notifyListeners();
@@ -21,4 +23,20 @@ class AppProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  // addPrice({int newPrice}){
+  //   priceSum += newPrice;
+  //   notifyListeners();
+  // }
+  //
+  // addQuantity({int newQuantity}){
+  //   quantitySum += newQuantity;
+  //   notifyListeners();
+  // }
+  //
+  // getTotalPrice({int newTotal}){
+  //
+  //   totalPrice = priceSum * quantitySum;
+  //   notifyListeners();
+  // }
 }

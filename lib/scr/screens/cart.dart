@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_food_delivery/scr/helpers/style.dart';
-// import 'package:flutter_food_delivery/scr/providers/app.dart';
+import 'package:flutter_food_delivery/scr/providers/app.dart';
 import 'package:flutter_food_delivery/scr/providers/user.dart';
 import 'package:flutter_food_delivery/scr/widgets/custom_text.dart';
+import 'package:flutter_food_delivery/scr/widgets/loading.dart';
 import 'package:provider/provider.dart';
 
 class CartScreen extends StatefulWidget {
@@ -13,12 +14,12 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   final _key = GlobalKey<ScaffoldState>();
-  // OrderServices _orderServices = OrderServices();
 
   @override
     Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context);
-    // final app = Provider.of<AppProvider>(context);
+    final app = Provider.of<AppProvider>(context);
+
     return Scaffold(
       key: _key,
         appBar: AppBar(
@@ -39,9 +40,10 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ),
         backgroundColor: white,
-        body: ListView.builder(
+        body: app.isLoading ? Loading() : ListView.builder(
             itemCount: user.userModel.cart.length,
             itemBuilder: (_,index){
+
           return Padding(
             padding: const EdgeInsets.all(16),
             child: Container(
@@ -103,7 +105,21 @@ class _CartScreenState extends State<CartScreen> {
                           ]),
                         ),
                         IconButton(icon: Icon(Icons.delete, color: red),
-                            onPressed: null)
+                            onPressed: () async{
+                          app.changeLoading();
+                          bool val = await user.removeFromCart(cartItem: user.userModel.cart[index]);
+                          if(val){
+                          user.reloadUserModel();
+                          _key.currentState.showSnackBar(
+                              SnackBar(content: Text("Item Removed from cart"))
+                          );
+                          app.changeLoading();
+                          return;
+                          }else{
+                            print("Item was not removed");
+                            app.changeLoading();
+                          }
+                        })
                       ],
                     ),
                   )
@@ -127,7 +143,7 @@ class _CartScreenState extends State<CartScreen> {
                               fontSize: 22,
                               fontWeight: FontWeight.bold)),
                       TextSpan(
-                          text: "\₹150",
+                        text: "\₹${user.userModel.totalCartPrice}",
                           style: TextStyle(
                               color: primary,
                               fontSize: 22,
@@ -151,4 +167,4 @@ class _CartScreenState extends State<CartScreen> {
         ),
       );
     }
-  }
+}
