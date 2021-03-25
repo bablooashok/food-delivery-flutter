@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_food_delivery/scr/helpers/user.dart';
+import 'package:flutter_food_delivery/scr/models/product.dart';
 import 'package:flutter_food_delivery/scr/models/user.dart';
+import 'package:uuid/uuid.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
@@ -84,6 +86,36 @@ class UserProvider with ChangeNotifier {
     name.text = "";
     password.text = "";
     email.text = "";
+  }
+
+  Future<bool> addToCard({ProductModel product, int quantity}) async{
+    try{
+      var uuid = Uuid();
+      String cartItemId = uuid.v4();
+      List cart = _userModel.cart;
+      bool itemExists = false;
+      Map cartItem = {
+        "id": cartItemId,
+        "name": product.name,
+        "image": product.image,
+        "productId": product.id,
+        "price": product.price,
+        "quantity": quantity
+      };
+      for(Map item in cart){
+        if(item["productId"] == cartItem["productId"]){
+          item["quantity"] = item["quantity"] + quantity;
+          itemExists = true;
+          break;
+        }
+      }
+      if(!itemExists) {
+        _userServicse.addToCart(userId: _user.uid, cartItem: cartItem);
+      }
+      return true;
+    }catch(e){
+      return false;
+    }
   }
 
   Future<void> _onStateChanged(FirebaseUser firebaseUser) async {

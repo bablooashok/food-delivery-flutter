@@ -42,6 +42,7 @@ class ProductServices {
 
   Future<List<ProductModel>> searchProducts({String productName}) {
     String searchKey = productName[0].toUpperCase() + productName.substring(1);
+
     return _firestore
         .collection(collection)
         .orderBy("name")

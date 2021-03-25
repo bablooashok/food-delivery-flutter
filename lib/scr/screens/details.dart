@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_food_delivery/scr/helpers/screen_navigation.dart';
 import 'package:flutter_food_delivery/scr/models/product.dart';
+import 'package:flutter_food_delivery/scr/providers/app.dart';
+import 'package:flutter_food_delivery/scr/providers/user.dart';
+import 'package:flutter_food_delivery/scr/screens/cart.dart';
 import 'package:flutter_food_delivery/scr/widgets/custom_text.dart';
+import 'package:flutter_food_delivery/scr/widgets/loading.dart';
+import 'package:provider/provider.dart';
 
 import '../helpers/style.dart';
 
@@ -15,10 +21,17 @@ class Details extends StatefulWidget {
 
 class _DetailsState extends State<Details> {
   int quantity = 1;
+  final _key = GlobalKey<ScaffoldState>();
+
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context);
+    final app = Provider.of<AppProvider>(context);
+
+
     return Scaffold(
+      key: _key,
       appBar: AppBar(
         iconTheme: IconThemeData(color: black),
         backgroundColor: white,
@@ -26,7 +39,9 @@ class _DetailsState extends State<Details> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.shopping_cart),
-            onPressed: () {},
+            onPressed: () {
+              changeScreen(context, CartScreen());
+            },
           ),
         ],
         leading: IconButton(
@@ -87,12 +102,22 @@ class _DetailsState extends State<Details> {
                       }),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () async{
+                    // app.changeLoading();
+                    bool val = await user.addToCard(product: widget.product, quantity: quantity);
+                    if(val){
+                      _key.currentState.showSnackBar(
+                          SnackBar(content: Text("Item added to cart!"))
+                      );
+                      return;
+                    }
+                    // app.changeLoading();
+                    },
                   child: Container(
                     decoration: BoxDecoration(
                         color: primary,
                         borderRadius: BorderRadius.circular(20)),
-                    child: Padding(
+                    child: app.isLoading ? Loading():Padding(
                       padding: const EdgeInsets.fromLTRB(28, 12, 28, 12),
                       child: CustomText(
                         text: "Add $quantity To Cart",

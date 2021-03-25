@@ -8,6 +8,7 @@ import 'package:flutter_food_delivery/scr/providers/category.dart';
 import 'package:flutter_food_delivery/scr/providers/product.dart';
 import 'package:flutter_food_delivery/scr/providers/restaurant.dart';
 import 'package:flutter_food_delivery/scr/providers/user.dart';
+import 'package:flutter_food_delivery/scr/screens/cart.dart';
 import 'package:flutter_food_delivery/scr/screens/category.dart';
 import 'package:flutter_food_delivery/scr/screens/product_search.dart';
 import 'package:flutter_food_delivery/scr/screens/restaurant.dart';
@@ -47,26 +48,18 @@ class _HomeState extends State<Home> {
           Stack(
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.shopping_cart),
+                icon: Icon(Icons.camera_alt_outlined),
                 onPressed: () {},
-              ),
-              Positioned(
-                top: 12,
-                right: 12,
-                child: Container(
-                  height: 10,
-                  width: 10,
-                  decoration: BoxDecoration(
-                      color: green, borderRadius: BorderRadius.circular(20.0)),
-                ),
               ),
             ],
           ),
           Stack(
             children: <Widget>[
               IconButton(
-                icon: Icon(Icons.notifications),
-                onPressed: () {},
+                icon: Icon(Icons.shopping_cart),
+                onPressed: () {
+                  changeScreen(context, CartScreen());
+                },
               ),
               Positioned(
                 top: 12,
@@ -119,7 +112,9 @@ class _HomeState extends State<Home> {
               title: CustomText(text: "My orders"),
             ),
             ListTile(
-              onTap: () {},
+              onTap: () {
+                changeScreen(context, CartScreen());
+               },
               leading: Icon(Icons.shopping_cart),
               title: CustomText(text: "Cart"),
             ),

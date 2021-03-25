@@ -14,6 +14,12 @@ class UserServices {
     _firestore.collection(collection).document(values['id']).updateData(values);
   }
 
+  void addToCart({String userId,Map cartItem}) {
+    _firestore.collection(collection).document(userId).updateData({
+      "cart": FieldValue.arrayUnion([cartItem])
+    });
+  }
+
   Future<UserModel> getUserById(String id) =>
       _firestore.collection(collection).document(id).get().then((doc) {
         return UserModel.fromSnapshot(doc);
