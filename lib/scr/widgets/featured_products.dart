@@ -73,8 +73,11 @@ class Featured extends StatelessWidget {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: CustomText(
-                            text: productProvider.products[index].name,
+                          child: Container(
+                            width: 137,
+                            child: CustomText(
+                              text: productProvider.products[index].name,
+                            ),
                           ),
                         ),
                         Padding(

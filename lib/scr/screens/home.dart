@@ -8,6 +8,7 @@ import 'package:flutter_food_delivery/scr/providers/category.dart';
 import 'package:flutter_food_delivery/scr/providers/product.dart';
 import 'package:flutter_food_delivery/scr/providers/restaurant.dart';
 import 'package:flutter_food_delivery/scr/providers/user.dart';
+import 'package:flutter_food_delivery/scr/screens/camera.dart';
 import 'package:flutter_food_delivery/scr/screens/cart.dart';
 import 'package:flutter_food_delivery/scr/screens/category.dart';
 import 'package:flutter_food_delivery/scr/screens/product_search.dart';
@@ -19,6 +20,8 @@ import 'package:flutter_food_delivery/scr/widgets/featured_products.dart';
 import 'package:flutter_food_delivery/scr/widgets/loading.dart';
 import 'package:flutter_food_delivery/scr/widgets/restaurant.dart';
 import 'package:provider/provider.dart';
+
+import 'order.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -49,7 +52,9 @@ class _HomeState extends State<Home> {
             children: <Widget>[
               IconButton(
                 icon: Icon(Icons.camera_alt_outlined),
-                onPressed: () {},
+                onPressed: () {
+                  changeScreen(context, CameraScreen());
+                },
               ),
             ],
           ),
@@ -92,22 +97,10 @@ class _HomeState extends State<Home> {
               ),
             ),
             ListTile(
-              onTap: () {},
-              leading: Icon(Icons.home),
-              title: CustomText(text: "Home"),
-            ),
-            ListTile(
-              onTap: () {},
-              leading: Icon(Icons.fastfood),
-              title: CustomText(text: "Food I like"),
-            ),
-            ListTile(
-              onTap: () {},
-              leading: Icon(Icons.restaurant),
-              title: CustomText(text: "Liked restaurants"),
-            ),
-            ListTile(
-              onTap: () {},
+              onTap: () async{
+                await user.getOrders();
+               changeScreen(context, OrderScreen());
+              },
               leading: Icon(Icons.bookmark_border),
               title: CustomText(text: "My orders"),
             ),

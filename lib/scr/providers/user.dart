@@ -3,7 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_food_delivery/scr/helpers/order.dart';
 import 'package:flutter_food_delivery/scr/helpers/user.dart';
+import 'package:flutter_food_delivery/scr/models/order.dart';
 import 'package:flutter_food_delivery/scr/models/product.dart';
 import 'package:flutter_food_delivery/scr/models/user.dart';
 import 'package:uuid/uuid.dart';
@@ -16,7 +18,10 @@ class UserProvider with ChangeNotifier {
   Status _status = Status.Uninitialized;
   Firestore _firestore = Firestore.instance;
   UserServices _userServicse = UserServices();
+  OrderServices _orderServices = OrderServices();
   UserModel _userModel;
+  List<OrderModel> orders = [];
+
 
 //  getter
   UserModel get userModel => _userModel;
@@ -109,7 +114,7 @@ class UserProvider with ChangeNotifier {
       var uuid = Uuid();
       String cartItemId = uuid.v4();
       List cart = _userModel.cart;
-      // bool itemExists = false;
+      bool itemExists = false;
       Map cartItem = {
         "id": cartItemId,
         "name": product.name,
@@ -118,20 +123,25 @@ class UserProvider with ChangeNotifier {
         "price": product.price,
         "quantity": quantity
       };
-      // for(Map item in cart){
-      //   if(item["productId"] == cartItem["productId"]){
-      //     item["quantity"] = item["quantity"] + quantity;
-      //     itemExists = true;
-      //     break;
-      //   }
-      // }
-      //   if(!itemExists) {
+      for(Map item in cart){
+        if(item["productId"] == cartItem["productId"]){
+          item["quantity"] = item["quantity"] + quantity;
+          itemExists = true;
+          break;
+        }
+      }
+        if(!itemExists) {
           _userServicse.addToCart(userId: _user.uid, cartItem: cartItem);
-      //   }
+        }
       return true;
     }catch(e){
       return false;
     }
+  }
+
+  getOrders() async{
+    orders = await _orderServices.getUserOrders(userId: _user.uid);
+    notifyListeners();
   }
 
   Future<bool> removeFromCart({Map cartItem,}) async{
