@@ -3,16 +3,16 @@ import 'package:flutter_food_delivery/scr/helpers/restaurant.dart';
 import 'package:flutter_food_delivery/scr/models/restaurant.dart';
 
 class RestaurantProvider with ChangeNotifier {
-  RestaurantSrevices _restaurantServices = RestaurantSrevices();
+  RestaurantServices _restaurantServices = RestaurantServices();
   List<RestaurantModel> restaurants = [];
   List<RestaurantModel> searchedRestaurants = [];
   RestaurantModel restaurant;
 
   RestaurantProvider.initialize() {
-    _loadRestaurants();
+    loadRestaurants();
   }
 
-  _loadRestaurants() async {
+  loadRestaurants() async {
     restaurants = await _restaurantServices.getRestaurants();
     notifyListeners();
   }

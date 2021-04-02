@@ -11,10 +11,10 @@ class ProductProvider with ChangeNotifier {
   List<ProductModel> productsSearched = [];
 
   ProductProvider.initialize() {
-    _loadCategories();
+    loadProducts();
   }
 
-  _loadCategories() async {
+  loadProducts() async {
     products = await _productServices.getProducts();
     notifyListeners();
   }

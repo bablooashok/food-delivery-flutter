@@ -15,7 +15,7 @@ class CartScreen extends StatefulWidget {
 }
 
 class _CartScreenState extends State<CartScreen> {
-  final _key = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _key = GlobalKey<ScaffoldMessengerState>();
   OrderServices _orderServices = OrderServices();
 
   @override
@@ -170,7 +170,7 @@ class _CartScreenState extends State<CartScreen> {
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20), color: primary),
-                  child: FlatButton(
+                  child: TextButton(
                       onPressed: () {
                         if (user.userModel.totalCartPrice == 0) {
                           showDialog(
@@ -229,7 +229,7 @@ class _CartScreenState extends State<CartScreen> {
                                           children: [
                                             SizedBox(
                                               width: 140,
-                                              child: RaisedButton(
+                                              child: ElevatedButton(
                                                 onPressed: () async {
                                                   var uuid = Uuid();
                                                   String id = uuid.v4();
@@ -265,24 +265,27 @@ class _CartScreenState extends State<CartScreen> {
                                                   style:
                                                       TextStyle(color: white),
                                                 ),
-                                                color: const Color(0xFF1BC0C5),
-                                              ),
+                                                style: ButtonStyle(
+                                                    backgroundColor: MaterialStateProperty.all<Color>(green)
+                                                ),                                              ),
                                             ),
                                             SizedBox(
                                               width: 20,
                                             ),
                                             SizedBox(
                                               width: 140,
-                                              child: RaisedButton(
+                                              child: ElevatedButton(
                                                 onPressed: () {
                                                   Navigator.pop(context);
                                                 },
+                                                style: ButtonStyle(
+                                                  backgroundColor: MaterialStateProperty.all<Color>(red)
+                                                ),
                                                 child: Text(
                                                   "Reject",
                                                   style: TextStyle(
                                                       color: Colors.white),
                                                 ),
-                                                color: red,
                                               ),
                                             )
                                           ],

@@ -17,7 +17,7 @@ class UserProvider with ChangeNotifier {
   FirebaseUser _user;
   Status _status = Status.Uninitialized;
   Firestore _firestore = Firestore.instance;
-  UserServices _userServicse = UserServices();
+  UserServices _userServices = UserServices();
   OrderServices _orderServices = OrderServices();
   UserModel _userModel;
   List<OrderModel> orders = [];
@@ -53,7 +53,7 @@ class UserProvider with ChangeNotifier {
           'email': email.text,
           'uid': result.user.uid,
           "likedFood": [],
-          "likedRestaurants": []
+          "cart": []
         });
       });
       return true;
@@ -94,7 +94,7 @@ class UserProvider with ChangeNotifier {
   }
 
   Future<void> reloadUserModel() async{
-    _userModel = await _userServicse.getUserById((user.uid));
+    _userModel = await _userServices.getUserById((user.uid));
     notifyListeners();
   }
 
@@ -104,7 +104,7 @@ class UserProvider with ChangeNotifier {
     } else {
       _user = firebaseUser;
       _status = Status.Authenticated;
-      _userModel = await _userServicse.getUserById(user.uid);
+      _userModel = await _userServices.getUserById(user.uid);
     }
     notifyListeners();
   }
@@ -130,9 +130,9 @@ class UserProvider with ChangeNotifier {
           break;
         }
       }
-        if(!itemExists) {
-          _userServicse.addToCart(userId: _user.uid, cartItem: cartItem);
-        }
+      if(!itemExists) {
+        _userServices.addToCart(userId: _user.uid, cartItem: cartItem);
+      }
       return true;
     }catch(e){
       return false;
@@ -146,7 +146,7 @@ class UserProvider with ChangeNotifier {
 
   Future<bool> removeFromCart({Map cartItem,}) async{
     try{
-    _userServicse.removeFromCart(userId: _user.uid,cartItem: cartItem);
+    _userServices.removeFromCart(userId: _user.uid,cartItem: cartItem);
 
       return true;
     }catch(e){

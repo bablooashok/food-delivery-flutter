@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/restaurant.dart';
 
-class RestaurantSrevices {
+class RestaurantServices {
   String collection = "restaurants";
   Firestore _firestore = Firestore.instance;
 
@@ -14,11 +14,7 @@ class RestaurantSrevices {
         return restaurants;
       });
 
-  Future<RestaurantModel> getRestaurantById({int id}) => _firestore
-          .collection(collection)
-          .document(id.toString())
-          .get()
-          .then((doc) {
+  Future<RestaurantModel> getRestaurantById({int id}) => _firestore.collection(collection).document(id.toString()).get().then((doc) {
         return RestaurantModel.fromSnapshot(doc);
       });
 

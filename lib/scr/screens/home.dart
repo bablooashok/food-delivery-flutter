@@ -11,6 +11,7 @@ import 'package:flutter_food_delivery/scr/providers/user.dart';
 import 'package:flutter_food_delivery/scr/screens/camera.dart';
 import 'package:flutter_food_delivery/scr/screens/cart.dart';
 import 'package:flutter_food_delivery/scr/screens/category.dart';
+import 'package:flutter_food_delivery/scr/screens/login.dart';
 import 'package:flutter_food_delivery/scr/screens/product_search.dart';
 import 'package:flutter_food_delivery/scr/screens/restaurant.dart';
 import 'package:flutter_food_delivery/scr/screens/restaurant_search.dart';
@@ -36,7 +37,6 @@ class _HomeState extends State<Home> {
     final categoryProvider = Provider.of<CategoryProvider>(context);
     final restaurantProvider = Provider.of<RestaurantProvider>(context);
     final productProvider = Provider.of<ProductProvider>(context);
-    // final app = Provider.of<AppProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -99,6 +99,7 @@ class _HomeState extends State<Home> {
             ListTile(
               onTap: () async{
                 await user.getOrders();
+
                changeScreen(context, OrderScreen());
               },
               leading: Icon(Icons.bookmark_border),
@@ -112,9 +113,12 @@ class _HomeState extends State<Home> {
               title: CustomText(text: "Cart"),
             ),
             ListTile(
-              onTap: () {},
-              leading: Icon(Icons.settings),
-              title: CustomText(text: "Settings"),
+              onTap: () {
+                user.signOut();
+                changeScreenReplacement(context, LoginScreen());
+              },
+              leading: Icon(Icons.exit_to_app),
+              title: CustomText(text: "Log Out"),
             ),
           ],
         ),

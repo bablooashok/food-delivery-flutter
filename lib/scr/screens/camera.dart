@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_food_delivery/scr/helpers/style.dart';
-import 'package:flutter_food_delivery/scr/widgets/custom_text.dart';
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_food_delivery/scr/providers/app.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:tflite/tflite.dart';
 
 class CameraScreen extends StatefulWidget {
@@ -11,8 +11,8 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-  List _outputs;
-  File _image;
+  File imageFile;
+  List outputs;
   bool _loading = false;
 
   @override
@@ -29,77 +29,117 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: black),
-        backgroundColor: white,
-        elevation: 0,
-        title: CustomText(text: "Food Recognition"),
-        leading: IconButton(icon: Icon(Icons.close), onPressed: (){
-          Navigator.pop(context);
-        }),
+        title: Text("camera"),
       ),
-      backgroundColor: white,
       body: _loading ? Container(
         alignment: Alignment.center,
         child: CircularProgressIndicator(),
       ) : Container(
         width: MediaQuery.of(context).size.width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _image == null ? Container() : Image.file(_image),
-            SizedBox(
-              height: 20,
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.only(top:20.0),
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                imageFile == null ?
+                Text("No Image Selected") :
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.file(imageFile,width: 400,height: 400,),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                outputs != null ? Text("${outputs[0]["label"]}",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20,
+                    background: Paint()..color = Colors.white,
+                  ),) : Text("select a Food Image to know the Name of the Food Item"),
+                SizedBox(
+                  height: 20,
+                ),
+                RaisedButton(onPressed: (){
+                  _showChoiceDialog(context);
+                },child: Text("Select Image"),)
+              ],
             ),
-            _outputs != null
-                ? Text("${_outputs[0]["label"]}",
-              style: TextStyle(
-              color: black,
-                fontSize: 20.0,
-                background: Paint()..color = white
-            )
-            ) : Container()
-          ],
+          ),
         ),
       ),
-        floatingActionButton: FloatingActionButton(
-        onPressed: pickImage,
-          backgroundColor: red,
-          child: Icon(Icons.image),
-    ),
     );
   }
 
-  pickImage() async{
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    if (image == null) return null;
-    setState(() {
+  openGallery(BuildContext context) async{
+
+    var picture = await ImagePicker.pickImage(source: ImageSource.gallery);
+    this.setState(() {
       _loading = true;
-      _image = image;
+      imageFile = picture;
     });
-    classifyImage(image);
+    Navigator.of(context).pop();
+    classifyImage(imageFile);
+  }
+
+  openCamera(BuildContext context) async{
+    var picture = await ImagePicker.pickImage(source: ImageSource.camera);
+    this.setState(() {
+      _loading = true;
+      imageFile = picture;
+    });
+    Navigator.of(context).pop();
+    classifyImage(imageFile);
+  }
+
+  Future<void> _showChoiceDialog(BuildContext context){
+    return showDialog(context: context, builder: (BuildContext context){
+      return AlertDialog(
+        title: Text("Select a source"),
+        content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                GestureDetector(
+                  child: Text("Gallery"),
+                  onTap: (){
+                    openGallery(context);
+                  },
+                ),
+                Padding(padding: EdgeInsets.all(8)),
+                GestureDetector(
+                  child: Text("Camera"),
+                  onTap: (){
+                    openCamera(context);
+                  },
+                )
+              ],
+            )
+        ),
+      );
+    });
   }
 
   classifyImage(File image) async{
     var output = await Tflite.runModelOnImage(
-      path:image.path,
-      numResults: 2,
-      threshold: 0.5,
-      imageMean: 127.5,
-      imageStd: 127.5,
+        path: image.path,
+        numResults: 2,
+        threshold: 0.5,
+        imageMean: 127.5,
+        imageStd: 127.5
     );
     setState(() {
       _loading = false;
-      _outputs = output;
+      outputs = output;
     });
   }
 
   loadModel() async{
     await Tflite.loadModel(
-      model: "images/model_unquant.tflite",
-      labels: "images/labels.txt",
+      model: "assets/model_unquant.tflite",
+      labels: "assets/labels.txt",
     );
   }
 
