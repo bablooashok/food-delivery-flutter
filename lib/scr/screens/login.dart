@@ -168,7 +168,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
     );
   }
-
   void _toggleView() {
     setState(() {
       _isHidden = !_isHidden;

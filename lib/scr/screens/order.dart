@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_food_delivery/scr/helpers/style.dart';
 import 'package:flutter_food_delivery/scr/models/order.dart';
-import 'package:flutter_food_delivery/scr/providers/app.dart';
+// import 'package:flutter_food_delivery/scr/providers/app.dart';
 import 'package:flutter_food_delivery/scr/providers/user.dart';
 import 'package:flutter_food_delivery/scr/widgets/custom_text.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +10,7 @@ class OrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context);
-    final app = Provider.of<AppProvider>(context);
+    // final app = Provider.of<AppProvider>(context);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(color: black),

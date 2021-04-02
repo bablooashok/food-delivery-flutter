@@ -19,7 +19,7 @@ class RegisScreen extends StatefulWidget {
 
 class _RegisScreenState extends State<RegisScreen> {
 
-  final _key = GlobalKey<ScaffoldState>();
+  final GlobalKey<ScaffoldMessengerState> _key = GlobalKey<ScaffoldMessengerState>();
   bool _isHidden = true;
 
   @override
@@ -133,7 +133,7 @@ class _RegisScreenState extends State<RegisScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           CustomText(
-                            text: "Resgister",
+                            text: "Register",
                             color: white,
                             size: 22,
                           )

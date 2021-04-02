@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_food_delivery/scr/models/order.dart';
-import 'package:flutter_food_delivery/scr/models/user.dart';
+// import 'package:flutter_food_delivery/scr/models/user.dart';
 
 class OrderServices {
   String collection = "orders";

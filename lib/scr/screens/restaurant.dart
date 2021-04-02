@@ -166,7 +166,7 @@ class RestaurantScreen extends StatelessWidget {
                 size: 18,
               ),
               Container(
-                  child: FlatButton.icon(
+                  child: TextButton.icon(
                       onPressed: () {},
                       icon: Icon(Icons.restaurant_menu),
                       label: CustomText(text: "Book Now")))
